@@ -1,0 +1,27 @@
+[project]
+name = "micro-learn"
+version = "0.1.0"
+description = "Micro-Learning Engine"
+requires-python = ">=3.11"
+dependencies = [
+    "fastapi",
+    "uvicorn[standard]",
+    "pydantic",
+    "pydantic-settings",
+    "sqlalchemy[asyncio]",
+    "asyncpg",
+    "alembic",
+    "python-dotenv",
+    "youtube-transcript-api",
+    "google-generativeai",
+    "httpx",
+    "beautifulsoup4",
+    "trafilatura",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest",
+    "pytest-asyncio",
+    "aiosqlite",
+]

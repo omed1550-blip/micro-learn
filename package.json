@@ -1,0 +1,6 @@
+{
+  "dependencies": {
+    "html2canvas": "^1.4.1",
+    "next-auth": "^4.24.13"
+  }
+}
