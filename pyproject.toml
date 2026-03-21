@@ -12,6 +12,8 @@ dependencies = [
     "asyncpg",
     "alembic",
     "python-dotenv",
+    "bcrypt",
+    "python-jose[cryptography]",
     "youtube-transcript-api",
     "google-generativeai",
     "httpx",
