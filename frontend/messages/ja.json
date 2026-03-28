@@ -18,13 +18,15 @@
     "home": "ホーム"
   },
   "hero": {
-    "title": "数分であらゆることを学ぼう。",
-    "subtitle": "YouTube動画や記事のURLを貼り付けてください。AIが重要な概念を抽出し、パーソナライズされたフラッシュカードとクイズを作成します。",
-    "inputPlaceholder": "YouTubeリンクまたは記事URLを貼り付け...",
-    "generate": "生成",
-    "featureFlashcards": "AIフラッシュカード",
-    "featureQuizzes": "スマートクイズ",
-    "featureSpaced": "間隔反復学習"
+    "title": "あらゆるものを、残る知識に変える。",
+    "subtitle": "動画、記事、ドキュメント、画像、メモ——どんなコンテンツでもOK。AIが面倒な作業を引き受け、間隔反復で記憶を定着させます。",
+    "inputPlaceholder": "YouTubeリンク、記事URLを貼り付け、または + 新規で他のオプション...",
+    "generate": "生成する",
+    "featureVideos": "動画 & 記事",
+    "featurePDFs": "PDF & 画像",
+    "featureNotes": "メモ & ドキュメント",
+    "featureAI": "AIフラッシュカード & クイズ",
+    "featureSpaced": "間隔反復"
   },
   "processing": {
     "stage1Title": "コンテンツを抽出中...",

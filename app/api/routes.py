@@ -268,7 +268,7 @@ async def generate_from_notes(request: NotesRequest, req: Request, db: AsyncSess
 @router.post("/generate/upload", response_model=LearningModuleSchema)
 @limiter.limit("10/minute")
 async def generate_from_upload(
-    req: Request,
+    request: Request,
     file: UploadFile = File(...),
     generate_flashcards: bool = Form(True),
     generate_quiz: bool = Form(True),

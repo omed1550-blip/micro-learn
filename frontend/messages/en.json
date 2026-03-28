@@ -18,12 +18,14 @@
     "home": "Home"
   },
   "hero": {
-    "title": "Learn anything in minutes.",
-    "subtitle": "Paste a YouTube video or article. Our AI extracts the key concepts and creates personalized flashcards and quizzes.",
-    "inputPlaceholder": "Paste a YouTube link or article URL...",
+    "title": "Turn anything into knowledge you keep.",
+    "subtitle": "Drop any content — videos, articles, documents, images, or notes. AI does the heavy lifting. Spaced repetition makes it stick.",
+    "inputPlaceholder": "Paste a YouTube link, article URL, or click + New for more options...",
     "generate": "Generate",
-    "featureFlashcards": "AI-Powered Flashcards",
-    "featureQuizzes": "Smart Quizzes",
+    "featureVideos": "Videos & Articles",
+    "featurePDFs": "PDFs & Images",
+    "featureNotes": "Notes & Documents",
+    "featureAI": "AI Flashcards & Quizzes",
     "featureSpaced": "Spaced Repetition"
   },
   "processing": {

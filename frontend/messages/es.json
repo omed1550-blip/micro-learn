@@ -18,12 +18,14 @@
     "home": "Inicio"
   },
   "hero": {
-    "title": "Aprende cualquier cosa en minutos.",
-    "subtitle": "Pega un video de YouTube o un artículo. Nuestra IA extrae los conceptos clave y crea tarjetas y cuestionarios personalizados.",
-    "inputPlaceholder": "Pega un enlace de YouTube o URL de artículo...",
+    "title": "Convierte cualquier cosa en conocimiento que perdura.",
+    "subtitle": "Agrega cualquier contenido — videos, artículos, documentos, imágenes o notas. La IA hace el trabajo pesado. La repetición espaciada lo fija.",
+    "inputPlaceholder": "Pega un enlace de YouTube, URL de artículo, o haz clic en + Nuevo para más opciones...",
     "generate": "Generar",
-    "featureFlashcards": "Tarjetas con IA",
-    "featureQuizzes": "Cuestionarios inteligentes",
+    "featureVideos": "Videos y artículos",
+    "featurePDFs": "PDFs e imágenes",
+    "featureNotes": "Notas y documentos",
+    "featureAI": "Tarjetas y cuestionarios con IA",
     "featureSpaced": "Repetición espaciada"
   },
   "processing": {

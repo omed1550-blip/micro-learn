@@ -18,12 +18,14 @@
     "home": "首页"
   },
   "hero": {
-    "title": "几分钟学会任何知识。",
-    "subtitle": "粘贴 YouTube 视频或文章链接。AI 提取关键概念，生成个性化闪卡和测验。",
-    "inputPlaceholder": "粘贴 YouTube 链接或文章 URL...",
+    "title": "把任何内容变成留得住的知识。",
+    "subtitle": "投入任何内容——视频、文章、文档、图片或笔记。AI替你完成繁重工作。间隔重复让知识扎根。",
+    "inputPlaceholder": "粘贴YouTube链接、文章URL，或点击 + 新建获取更多选项...",
     "generate": "生成",
-    "featureFlashcards": "AI 闪卡",
-    "featureQuizzes": "智能测验",
+    "featureVideos": "视频与文章",
+    "featurePDFs": "PDF与图片",
+    "featureNotes": "笔记与文档",
+    "featureAI": "AI闪卡与测验",
     "featureSpaced": "间隔重复"
   },
   "processing": {

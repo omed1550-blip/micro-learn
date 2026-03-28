@@ -18,12 +18,14 @@
     "home": "Ana Sayfa"
   },
   "hero": {
-    "title": "Dakikalar içinde her şeyi öğren.",
-    "subtitle": "Bir YouTube videosu veya makale yapıştırın. Yapay zekamız temel kavramları çıkarır ve kişiselleştirilmiş kartlar ve testler oluşturur.",
-    "inputPlaceholder": "YouTube bağlantısı veya makale URL'si yapıştırın...",
+    "title": "Her şeyi kalıcı bilgiye dönüştürün.",
+    "subtitle": "İstediğiniz içeriği ekleyin — videolar, makaleler, belgeler, görseller veya notlar. Yapay zeka ağır işi halleder. Aralıklı tekrar bilgiyi kalıcı kılar.",
+    "inputPlaceholder": "YouTube linki, makale URL'si yapıştırın veya + Yeni'ye tıklayın...",
     "generate": "Oluştur",
-    "featureFlashcards": "Yapay Zeka Destekli Kartlar",
-    "featureQuizzes": "Akıllı Testler",
+    "featureVideos": "Videolar & Makaleler",
+    "featurePDFs": "PDF & Görseller",
+    "featureNotes": "Notlar & Belgeler",
+    "featureAI": "Yapay Zeka Kartları & Testler",
     "featureSpaced": "Aralıklı Tekrar"
   },
   "processing": {

@@ -6,7 +6,6 @@ import { motion, AnimatePresence } from "framer-motion";
 import {
   Sparkles,
   Brain,
-  CheckCircle,
   RotateCcw,
   Loader2,
   AlertCircle,
@@ -20,6 +19,8 @@ import {
   BarChart3,
   WifiOff,
   PenLine,
+  Play,
+  FileText,
 } from "lucide-react";
 import Link from "next/link";
 import { useSession } from "next-auth/react";
@@ -162,15 +163,23 @@ export default function Home() {
             {/* Feature pills */}
             <div className="flex flex-wrap items-center justify-center gap-2 sm:gap-3 mb-8 sm:mb-10">
               <span className="glass rounded-full px-3 sm:px-4 py-2 text-xs sm:text-sm text-text-secondary flex items-center gap-2">
+                <Play size={14} className="text-primary" />
+                {t("hero.featureVideos")}
+              </span>
+              <span className="glass rounded-full px-3 sm:px-4 py-2 text-xs sm:text-sm text-text-secondary flex items-center gap-2">
+                <FileText size={14} className="text-primary" />
+                {t("hero.featurePDFs")}
+              </span>
+              <span className="glass rounded-full px-3 sm:px-4 py-2 text-xs sm:text-sm text-text-secondary flex items-center gap-2">
+                <PenLine size={14} className="text-primary" />
+                {t("hero.featureNotes")}
+              </span>
+              <span className="glass rounded-full px-3 sm:px-4 py-2 text-xs sm:text-sm text-text-secondary flex items-center gap-2">
+                <Sparkles size={14} className="text-primary" />
+                {t("hero.featureAI")}
+              </span>
+              <span className="glass rounded-full px-3 sm:px-4 py-2 text-xs sm:text-sm text-text-secondary flex items-center gap-2">
                 <Brain size={14} className="text-primary" />
-                {t("hero.featureFlashcards")}
-              </span>
-              <span className="glass rounded-full px-3 sm:px-4 py-2 text-xs sm:text-sm text-text-secondary flex items-center gap-2">
-                <CheckCircle size={14} className="text-primary" />
-                {t("hero.featureQuizzes")}
-              </span>
-              <span className="glass rounded-full px-3 sm:px-4 py-2 text-xs sm:text-sm text-text-secondary flex items-center gap-2">
-                <RotateCcw size={14} className="text-primary" />
                 {t("hero.featureSpaced")}
               </span>
             </div>

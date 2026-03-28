@@ -18,12 +18,14 @@
     "home": "Início"
   },
   "hero": {
-    "title": "Aprenda qualquer coisa em minutos.",
-    "subtitle": "Cole um vídeo do YouTube ou artigo. Nossa IA extrai os conceitos-chave e cria flashcards e quizzes personalizados.",
-    "inputPlaceholder": "Cole um link do YouTube ou URL de artigo...",
+    "title": "Transforme qualquer coisa em conhecimento que fica.",
+    "subtitle": "Adicione qualquer conteúdo — vídeos, artigos, documentos, imagens ou notas. A IA faz o trabalho pesado. A repetição espaçada fixa o conhecimento.",
+    "inputPlaceholder": "Cole um link do YouTube, URL de artigo, ou clique + Novo para mais opções...",
     "generate": "Gerar",
-    "featureFlashcards": "Flashcards com IA",
-    "featureQuizzes": "Quizzes inteligentes",
+    "featureVideos": "Vídeos e artigos",
+    "featurePDFs": "PDFs e imagens",
+    "featureNotes": "Notas e documentos",
+    "featureAI": "Flashcards e quizzes com IA",
     "featureSpaced": "Repetição espaçada"
   },
   "processing": {

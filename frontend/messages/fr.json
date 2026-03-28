@@ -18,12 +18,14 @@
     "home": "Accueil"
   },
   "hero": {
-    "title": "Apprenez n'importe quoi en quelques minutes.",
-    "subtitle": "Collez une vidéo YouTube ou un article. Notre IA extrait les concepts clés et crée des flashcards et des quiz personnalisés.",
-    "inputPlaceholder": "Collez un lien YouTube ou l'URL d'un article...",
+    "title": "Transformez tout en savoir qui reste.",
+    "subtitle": "Déposez n'importe quel contenu — vidéos, articles, documents, images ou notes. L'IA fait le gros du travail. La répétition espacée ancre les connaissances.",
+    "inputPlaceholder": "Collez un lien YouTube, une URL d'article, ou cliquez + Nouveau pour plus d'options...",
     "generate": "Générer",
-    "featureFlashcards": "Flashcards par IA",
-    "featureQuizzes": "Quiz intelligents",
+    "featureVideos": "Vidéos et articles",
+    "featurePDFs": "PDFs et images",
+    "featureNotes": "Notes et documents",
+    "featureAI": "Flashcards et quiz IA",
     "featureSpaced": "Répétition espacée"
   },
   "processing": {

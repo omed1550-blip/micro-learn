@@ -18,12 +18,14 @@
     "home": "Beranda"
   },
   "hero": {
-    "title": "Pelajari apa saja dalam hitungan menit.",
-    "subtitle": "Tempel video YouTube atau artikel. AI kami mengekstrak konsep utama dan membuat flashcard serta kuis yang dipersonalisasi.",
-    "inputPlaceholder": "Tempel tautan YouTube atau URL artikel...",
+    "title": "Ubah apa pun jadi pengetahuan yang melekat.",
+    "subtitle": "Masukkan konten apa saja — video, artikel, dokumen, gambar, atau catatan. AI yang mengerjakan. Pengulangan berjarak membuatnya melekat.",
+    "inputPlaceholder": "Tempel link YouTube, URL artikel, atau klik + Baru untuk opsi lainnya...",
     "generate": "Buat",
-    "featureFlashcards": "Flashcard Berbasis AI",
-    "featureQuizzes": "Kuis Cerdas",
+    "featureVideos": "Video & Artikel",
+    "featurePDFs": "PDF & Gambar",
+    "featureNotes": "Catatan & Dokumen",
+    "featureAI": "Flashcard & Kuis AI",
     "featureSpaced": "Pengulangan Berjarak"
   },
   "processing": {

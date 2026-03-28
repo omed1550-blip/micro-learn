@@ -18,13 +18,15 @@
     "home": "Startseite"
   },
   "hero": {
-    "title": "Lerne alles in Minuten.",
-    "subtitle": "Füge ein YouTube-Video oder einen Artikel ein. Unsere KI extrahiert die Schlüsselkonzepte und erstellt personalisierte Lernkarten und Quizze.",
-    "inputPlaceholder": "YouTube-Link oder Artikel-URL einfügen...",
+    "title": "Mach aus allem Wissen, das bleibt.",
+    "subtitle": "Gib beliebige Inhalte ein — Videos, Artikel, Dokumente, Bilder oder Notizen. Die KI erledigt die Arbeit. Verteilte Wiederholung verankert das Wissen.",
+    "inputPlaceholder": "YouTube-Link, Artikel-URL einfügen oder + Neu für weitere Optionen...",
     "generate": "Generieren",
-    "featureFlashcards": "KI-Lernkarten",
-    "featureQuizzes": "Intelligente Quizze",
-    "featureSpaced": "Verteiltes Lernen"
+    "featureVideos": "Videos & Artikel",
+    "featurePDFs": "PDFs & Bilder",
+    "featureNotes": "Notizen & Dokumente",
+    "featureAI": "KI-Lernkarten & Quizze",
+    "featureSpaced": "Verteilte Wiederholung"
   },
   "processing": {
     "stage1Title": "Inhalt wird extrahiert...",
