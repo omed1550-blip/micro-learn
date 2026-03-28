@@ -34,6 +34,7 @@ const handler = NextAuth({
           name: data.user.name,
           image: data.user.image,
           accessToken: data.access_token,
+          emailVerified: data.user.email_verified ?? false,
         };
       },
     }),
@@ -72,11 +73,13 @@ const handler = NextAuth({
       if (user) {
         token.accessToken = (user as unknown as Record<string, unknown>).accessToken as string;
         token.userId = user.id;
+        token.emailVerified = (user as unknown as Record<string, unknown>).emailVerified as boolean;
       }
       return token;
     },
     async session({ session, token }) {
       session.accessToken = token.accessToken as string;
+      session.emailVerified = token.emailVerified as boolean;
       if (session.user) {
         session.user.id = token.userId as string;
       }

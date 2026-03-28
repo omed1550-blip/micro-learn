@@ -108,6 +108,12 @@ export default function SignInPage() {
             {loading ? <Loader2 size={16} className="animate-spin" /> : null}
             Sign In
           </button>
+
+          <div className="text-end">
+            <Link href="/auth/forgot-password" className="text-xs text-text-muted hover:text-primary transition-colors">
+              Forgot password?
+            </Link>
+          </div>
         </form>
 
         <div className="relative">

@@ -1,16 +1,19 @@
 import logging
+import random
 import re
-from datetime import datetime, timezone
+from datetime import datetime, timedelta, timezone
 from uuid import UUID
 
-from fastapi import APIRouter, Depends, Form, HTTPException, UploadFile, File
+from fastapi import APIRouter, Depends, Form, HTTPException, Request, UploadFile, File
 from pydantic import BaseModel, Field
+from slowapi import Limiter
+from slowapi.util import get_remote_address
 from sqlalchemy import select, func as sa_func
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import selectinload
 
 from app.models.database import get_db
-from app.models.models import LearningModule, Flashcard, QuizQuestion, QuizAttempt, StudySession, User, ManualDeck, ManualCard
+from app.models.models import LearningModule, Flashcard, QuizQuestion, QuizAttempt, StudySession, User, ManualDeck, ManualCard, PasswordReset
 from app.schemas.schemas import (
     GenerateRequest,
     NotesRequest,
@@ -57,11 +60,13 @@ from app.services.auth_service import (
     authenticate_email_user,
     get_or_create_oauth_user,
     create_access_token,
+    hash_password,
 )
 from app.api.dependencies import require_auth, verify_module_owner
 
 logger = logging.getLogger(__name__)
 
+limiter = Limiter(key_func=get_remote_address)
 router = APIRouter(prefix="/api")
 
 _MAX_FILE_SIZE = 20 * 1024 * 1024  # 20MB
@@ -72,7 +77,7 @@ _DOC_EXTS = {"docx", "doc", "txt", "md", "rtf"}
 
 
 def _user_dict(user: User) -> dict:
-    return {"id": str(user.id), "email": user.email, "name": user.name, "image": user.image}
+    return {"id": str(user.id), "email": user.email, "name": user.name, "image": user.image, "email_verified": user.email_verified}
 
 
 # ─── Auth endpoints ───
@@ -98,7 +103,8 @@ class OAuthRequest(BaseModel):
 
 
 @router.post("/auth/register")
-async def register(request: RegisterRequest, db: AsyncSession = Depends(get_db)):
+@limiter.limit("5/minute")
+async def register(request: RegisterRequest, req: Request, db: AsyncSession = Depends(get_db)):
     if not re.match(r"[^@]+@[^@]+\.[^@]+", request.email):
         raise HTTPException(status_code=400, detail="Invalid email format")
     try:
@@ -110,7 +116,8 @@ async def register(request: RegisterRequest, db: AsyncSession = Depends(get_db))
 
 
 @router.post("/auth/login")
-async def login(request: LoginRequest, db: AsyncSession = Depends(get_db)):
+@limiter.limit("5/minute")
+async def login(request: LoginRequest, req: Request, db: AsyncSession = Depends(get_db)):
     user = await authenticate_email_user(db, request.email, request.password)
     if not user:
         raise HTTPException(status_code=401, detail="Invalid email or password")
@@ -132,7 +139,7 @@ async def oauth_login(request: OAuthRequest, db: AsyncSession = Depends(get_db))
 async def get_me(user: User = Depends(require_auth)):
     return {
         "id": str(user.id), "email": user.email, "name": user.name,
-        "image": user.image, "created_at": user.created_at,
+        "image": user.image, "email_verified": user.email_verified, "created_at": user.created_at,
     }
 
 
@@ -213,7 +220,8 @@ async def _save_module(
 
 
 @router.post("/generate", response_model=LearningModuleSchema)
-async def generate_module(request: GenerateRequest, db: AsyncSession = Depends(get_db), user: User = Depends(require_auth)):
+@limiter.limit("10/minute")
+async def generate_module(request: GenerateRequest, req: Request, db: AsyncSession = Depends(get_db), user: User = Depends(require_auth)):
     try:
         extracted = await extract_content(source_url=str(request.url))
         return await _save_module(
@@ -237,7 +245,8 @@ async def generate_module(request: GenerateRequest, db: AsyncSession = Depends(g
 
 
 @router.post("/generate/notes", response_model=LearningModuleSchema)
-async def generate_from_notes(request: NotesRequest, db: AsyncSession = Depends(get_db), user: User = Depends(require_auth)):
+@limiter.limit("10/minute")
+async def generate_from_notes(request: NotesRequest, req: Request, db: AsyncSession = Depends(get_db), user: User = Depends(require_auth)):
     try:
         extracted = extract_from_notes(title=request.title, content=request.content)
         return await _save_module(
@@ -257,7 +266,9 @@ async def generate_from_notes(request: NotesRequest, db: AsyncSession = Depends(
 
 
 @router.post("/generate/upload", response_model=LearningModuleSchema)
+@limiter.limit("10/minute")
 async def generate_from_upload(
+    req: Request,
     file: UploadFile = File(...),
     generate_flashcards: bool = Form(True),
     generate_quiz: bool = Form(True),
@@ -305,7 +316,8 @@ async def generate_from_upload(
 
 
 @router.post("/generate/topic", response_model=LearningModuleSchema)
-async def generate_from_topic(request: TopicRequest, db: AsyncSession = Depends(get_db), user: User = Depends(require_auth)):
+@limiter.limit("10/minute")
+async def generate_from_topic(request: TopicRequest, req: Request, db: AsyncSession = Depends(get_db), user: User = Depends(require_auth)):
     try:
         processor = get_learning_processor()
         ai_output = await processor.generate_from_topic(
@@ -395,7 +407,8 @@ async def get_module(module_id: UUID, db: AsyncSession = Depends(get_db), user: 
 
 
 @router.post("/review")
-async def review_card(request: ReviewRequest, db: AsyncSession = Depends(get_db), user: User = Depends(require_auth)):
+@limiter.limit("60/minute")
+async def review_card(request: ReviewRequest, req: Request, db: AsyncSession = Depends(get_db), user: User = Depends(require_auth)):
     try:
         result = await ReviewService.review_card(
             flashcard_id=request.flashcard_id,
@@ -560,6 +573,9 @@ async def complete_session(module_id: UUID, session_id: UUID, db: AsyncSession =
     session = result.scalar_one_or_none()
     if session is None:
         raise HTTPException(status_code=404, detail="Session not found")
+
+    if session.is_completed:
+        return session
 
     session.is_completed = True
     session.updated_at = datetime.now(timezone.utc)
@@ -967,7 +983,16 @@ async def get_deck_study_queue(deck_id: UUID, db: AsyncSession = Depends(get_db)
                 review_dt = review_dt.replace(tzinfo=timezone.utc)
             if review_dt <= now:
                 overdue.append(c)
-    overdue.sort(key=lambda c: c.next_review or datetime.min.replace(tzinfo=timezone.utc))
+    def _sort_key(c):
+        nr = c.next_review
+        if nr is None:
+            return datetime.min.replace(tzinfo=timezone.utc)
+        if isinstance(nr, str):
+            nr = datetime.fromisoformat(nr)
+        if nr.tzinfo is None:
+            nr = nr.replace(tzinfo=timezone.utc)
+        return nr
+    overdue.sort(key=_sort_key)
 
     queue: list[ManualCard] = list(failed)
     new_iter = iter(new_cards[:5])
@@ -989,3 +1014,65 @@ async def get_deck_study_queue(deck_id: UUID, db: AsyncSession = Depends(get_db)
             break
 
     return queue[:20]
+
+
+# ─── Password Reset ───
+
+
+class ForgotPasswordRequest(BaseModel):
+    email: str = Field(min_length=1)
+
+
+class ResetPasswordRequest(BaseModel):
+    email: str = Field(min_length=1)
+    code: str = Field(min_length=6, max_length=6)
+    new_password: str = Field(min_length=8)
+
+
+@router.post("/auth/forgot-password")
+@limiter.limit("5/minute")
+async def forgot_password(request: ForgotPasswordRequest, req: Request, db: AsyncSession = Depends(get_db)):
+    result = await db.execute(select(User).where(User.email == request.email))
+    user = result.scalar_one_or_none()
+
+    if user:
+        code = f"{random.randint(0, 999999):06d}"
+        reset = PasswordReset(
+            user_id=user.id,
+            code=code,
+            expires_at=datetime.now(timezone.utc) + timedelta(minutes=30),
+        )
+        db.add(reset)
+        await db.commit()
+        logger.info(f"Password reset code for {request.email}: {code}")
+
+    return {"message": "If this email exists, a reset code has been sent"}
+
+
+@router.post("/auth/reset-password")
+@limiter.limit("5/minute")
+async def reset_password(request: ResetPasswordRequest, req: Request, db: AsyncSession = Depends(get_db)):
+    now = datetime.now(timezone.utc)
+    result = await db.execute(
+        select(PasswordReset)
+        .join(User, PasswordReset.user_id == User.id)
+        .where(
+            User.email == request.email,
+            PasswordReset.code == request.code,
+            PasswordReset.used == False,
+            PasswordReset.expires_at > now,
+        )
+        .order_by(PasswordReset.created_at.desc())
+        .limit(1)
+    )
+    reset = result.scalar_one_or_none()
+    if not reset:
+        raise HTTPException(status_code=400, detail="Invalid or expired reset code")
+
+    user_result = await db.execute(select(User).where(User.id == reset.user_id))
+    user = user_result.scalar_one()
+    user.hashed_password = hash_password(request.new_password)
+    reset.used = True
+    await db.commit()
+
+    return {"message": "Password reset successfully"}

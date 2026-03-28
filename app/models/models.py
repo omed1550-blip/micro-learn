@@ -216,6 +216,17 @@ class UserStats(Base):
     updated_at = mapped_column(DateTime(timezone=True), server_default=func.now(), onupdate=func.now())
 
 
+class PasswordReset(Base):
+    __tablename__ = "password_resets"
+
+    id: Mapped[uuid.UUID] = mapped_column(PortableUUID(), primary_key=True, default=uuid.uuid4)
+    user_id: Mapped[uuid.UUID] = mapped_column(PortableUUID(), ForeignKey("users.id", ondelete="CASCADE"), nullable=False)
+    code: Mapped[str] = mapped_column(String(6), nullable=False)
+    expires_at = mapped_column(DateTime(timezone=True), nullable=False)
+    used: Mapped[bool] = mapped_column(Boolean, default=False)
+    created_at = mapped_column(DateTime(timezone=True), server_default=func.now())
+
+
 class StudySession(Base):
     __tablename__ = "study_sessions"
 

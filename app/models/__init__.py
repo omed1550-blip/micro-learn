@@ -1,5 +1,5 @@
 from app.models.database import Base, engine, async_session, get_db
-from app.models.models import User, LearningModule, Flashcard, QuizQuestion, ReviewLog, StudySession, ManualDeck, ManualCard, DailyActivity, UserStats
+from app.models.models import User, LearningModule, Flashcard, QuizQuestion, ReviewLog, StudySession, ManualDeck, ManualCard, DailyActivity, UserStats, PasswordReset
 
 __all__ = [
     "Base",
@@ -16,4 +16,5 @@ __all__ = [
     "ManualCard",
     "DailyActivity",
     "UserStats",
+    "PasswordReset",
 ]

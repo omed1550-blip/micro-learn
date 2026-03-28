@@ -16,8 +16,13 @@ import {
   Plus,
   Lightbulb,
   Link as LinkIcon,
+  Upload,
+  BarChart3,
+  WifiOff,
+  PenLine,
 } from "lucide-react";
 import Link from "next/link";
+import { useSession } from "next-auth/react";
 import { generateModule, generateFromTopic, getModules, LearningModule, LearningModuleListItem, GenerateOptions, Difficulty } from "@/lib/api";
 import { getSourceIcon, getSourceColor } from "@/lib/sourceIcons";
 import ProcessingAnimation from "@/components/ProcessingAnimation";
@@ -27,6 +32,7 @@ import { useLocale } from "@/lib/LocaleContext";
 export default function Home() {
   const router = useRouter();
   const { t } = useLocale();
+  const { data: session } = useSession();
   const [inputUrl, setInputUrl] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -416,6 +422,78 @@ export default function Home() {
               ))}
             </div>
           </section>
+        )}
+
+        {/* Landing sections — non-logged-in users only */}
+        {!session && (
+          <>
+            {/* How It Works */}
+            <section className="px-4 sm:px-6 pb-16 max-w-4xl mx-auto w-full">
+              <h2 className="text-xl sm:text-2xl font-[800] text-center mb-10">{t("landing.howItWorks")}</h2>
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-6 relative">
+                <div className="hidden md:block absolute top-10 left-[20%] right-[20%] border-t-2 border-dashed border-border" />
+                {[
+                  { icon: <Upload size={24} className="text-primary" />, step: "1", title: t("landing.step1Title"), desc: t("landing.step1Desc") },
+                  { icon: <Sparkles size={24} className="text-primary" />, step: "2", title: t("landing.step2Title"), desc: t("landing.step2Desc") },
+                  { icon: <Brain size={24} className="text-primary" />, step: "3", title: t("landing.step3Title"), desc: t("landing.step3Desc") },
+                ].map((s) => (
+                  <motion.div
+                    key={s.step}
+                    initial={{ opacity: 0, y: 20 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true }}
+                    className="text-center relative z-10"
+                  >
+                    <div className="w-14 h-14 rounded-2xl glass flex items-center justify-center mx-auto mb-3">{s.icon}</div>
+                    <span className="text-primary text-xs font-bold">{t("landing.step")} {s.step}</span>
+                    <h3 className="font-[700] text-text-primary mt-1 mb-1">{s.title}</h3>
+                    <p className="text-text-secondary text-sm">{s.desc}</p>
+                  </motion.div>
+                ))}
+              </div>
+            </section>
+
+            {/* Features */}
+            <section className="px-4 sm:px-6 pb-16 max-w-4xl mx-auto w-full">
+              <h2 className="text-xl sm:text-2xl font-[800] text-center mb-10">{t("landing.features")}</h2>
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                {[
+                  { icon: <Sparkles size={20} className="text-primary" />, title: t("landing.feat1Title"), desc: t("landing.feat1Desc") },
+                  { icon: <BarChart3 size={20} className="text-primary" />, title: t("landing.feat2Title"), desc: t("landing.feat2Desc") },
+                  { icon: <RotateCcw size={20} className="text-primary" />, title: t("landing.feat3Title"), desc: t("landing.feat3Desc") },
+                  { icon: <PenLine size={20} className="text-primary" />, title: t("landing.feat4Title"), desc: t("landing.feat4Desc") },
+                  { icon: <WifiOff size={20} className="text-primary" />, title: t("landing.feat5Title"), desc: t("landing.feat5Desc") },
+                  { icon: <Brain size={20} className="text-primary" />, title: t("landing.feat6Title"), desc: t("landing.feat6Desc") },
+                ].map((f, i) => (
+                  <motion.div
+                    key={i}
+                    initial={{ opacity: 0, y: 15 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true }}
+                    transition={{ delay: i * 0.05 }}
+                    className="glass rounded-xl p-5"
+                  >
+                    <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center mb-3">{f.icon}</div>
+                    <h3 className="font-[700] text-text-primary text-sm mb-1">{f.title}</h3>
+                    <p className="text-text-secondary text-xs">{f.desc}</p>
+                  </motion.div>
+                ))}
+              </div>
+            </section>
+
+            {/* CTA */}
+            <section className="px-4 sm:px-6 pb-16 max-w-xl mx-auto w-full text-center">
+              <h2 className="text-xl sm:text-2xl font-[800] mb-3">{t("landing.ctaTitle")}</h2>
+              <p className="text-text-secondary text-sm mb-6">{t("landing.ctaDesc")}</p>
+              <Link
+                href="/auth/signup"
+                className="inline-flex items-center gap-2 bg-primary hover:bg-primary-hover text-white font-bold py-3 px-8 rounded-xl transition-colors"
+              >
+                <Sparkles size={18} />
+                {t("landing.ctaButton")}
+              </Link>
+            </section>
+          </>
         )}
 
         {/* Footer */}

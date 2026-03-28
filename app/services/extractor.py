@@ -8,7 +8,7 @@ import httpx
 import trafilatura
 from bs4 import BeautifulSoup
 from youtube_transcript_api import YouTubeTranscriptApi
-from youtube_transcript_api._errors import TranscriptsDisabled, NoTranscriptFound, RequestBlocked
+from youtube_transcript_api._errors import TranscriptsDisabled, NoTranscriptFound, RequestBlocked, IpBlocked
 
 from app.services.exceptions import ExtractionError, InvalidURLError, NoTranscriptError
 
@@ -139,13 +139,14 @@ async def extract_youtube(url: str) -> ExtractedContent:
             raise
         except (TranscriptsDisabled, NoTranscriptFound) as e:
             raise NoTranscriptError(str(e))
-        except RequestBlocked as e:
+        except (RequestBlocked, IpBlocked) as e:
             last_error = e
             if attempt < max_retries - 1:
                 await asyncio.sleep(2 ** attempt)
                 continue
             raise ExtractionError(
-                "YouTube is temporarily blocking requests. Please try again in a minute."
+                "YouTube is temporarily blocking transcript requests. "
+                "This often happens on cloud servers. Please try again later or use a different source."
             )
         except Exception as e:
             raise ExtractionError(f"Failed to extract YouTube transcript: {e}")
@@ -166,13 +167,15 @@ async def extract_article(url: str) -> ExtractedContent:
     text = ""
     html_content = ""
 
-    # Primary: trafilatura
+    # Primary: trafilatura (run in thread to avoid blocking event loop)
     try:
-        downloaded = trafilatura.fetch_url(url)
+        downloaded = await asyncio.to_thread(trafilatura.fetch_url, url)
         if downloaded:
             html_content = downloaded
-            text = trafilatura.extract(downloaded, include_comments=False, include_tables=True) or ""
-            metadata = trafilatura.extract_metadata(downloaded)
+            text = await asyncio.to_thread(
+                trafilatura.extract, downloaded, include_comments=False, include_tables=True
+            ) or ""
+            metadata = await asyncio.to_thread(trafilatura.extract_metadata, downloaded)
             if metadata and metadata.title:
                 title = metadata.title
     except Exception:
